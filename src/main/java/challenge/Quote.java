@@ -3,19 +3,24 @@ package challenge;
 public class Quote {
 
 	private String actor;
-	private String detail;
+	private String quote;
 
-	public Quote(String actor, String detail) {
+	public Quote(String actor, String quote) {
 		this.actor = actor;
-		this.detail = detail;
+		this.quote = quote;
 	}
 	
 	public String getActor() {
-		return null;
+		return this.actor;
 	}
 
 	public String getQuote() {
-		return null;
+		return this.quote;
+	}
+
+	@Override
+	public String toString() {
+		return "Quote [actor=" + actor + ", quote=" + quote + "]";
 	}
 
 }

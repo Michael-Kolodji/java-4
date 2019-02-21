@@ -1,6 +1,7 @@
 package challenge;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,13 +18,18 @@ public class QuoteServlet extends HttpServlet {
 			Quote quote;
 			String pathInfo = req.getPathInfo();
 			if (pathInfo == null || pathInfo.equals("/")) {
-				quote = null;
+				quote = new QuoteDao().getQuote();
 			} else {
 				String actor = pathInfo.split("/")[1];
-				quote = null;
+				quote = new QuoteDao().getQuoteByActor(actor);
 			}
 
-			resp.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
+			PrintWriter out = resp.getWriter();
+			String obj = "{\"actor\":\"" + quote.getActor() + "\",\"quote\":\"" + quote.getQuote() + "\"}";
+			out.print(obj);
+			out.flush();
+
+			resp.setStatus(HttpServletResponse.SC_ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

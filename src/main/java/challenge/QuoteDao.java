@@ -10,35 +10,75 @@ import java.util.List;
 public class QuoteDao {
 
 	public Quote getQuote() throws SQLException {
-		
-List<Quote> quotes = new ArrayList<Quote>();
-		
-        try (Connection connection = new ConnectionFactory().createConnection()) {
 
-            System.out.println("Conexão realizada !!!!");
+		List<Quote> quotes = new ArrayList<Quote>();
 
-            // lendo os registros
-            PreparedStatement stmt = connection.prepareStatement("select * from scripts where actor like 'Michael%'");
-            ResultSet resultSet = stmt.executeQuery();
+		new ConnectionFactory();
+		try (Connection connection = ConnectionFactory.createConnection()) {
 
-            while (resultSet.next()) {
-                String actor = resultSet.getString("actor");
-                String detail = resultSet.getString("detail");
-                
-                Quote quote = new Quote(actor, detail);
-                
-                quotes.add(quote);
-            }
+			if (connection.isClosed()) {
+				System.out.println("Conexão falhou");
+			} else {
+				System.out.println("Conexão realizada");
+			}
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        
-		return null;
+			PreparedStatement stmt = connection.prepareStatement("select * from scripts");
+			ResultSet resultSet = stmt.executeQuery();
+
+			while (resultSet.next()) {
+				String actor = resultSet.getString("actor");
+				String quote = resultSet.getString("detail");
+
+				Quote quote2 = new Quote(actor, quote);
+
+				quotes.add(quote2);
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		int indexRandom = (int) Math.round(Math.random() * quotes.size());
+
+		return quotes.get(indexRandom);
 	}
 
 	public Quote getQuoteByActor(String actor) throws SQLException {
-		return null;
+
+		List<Quote> quotes = new ArrayList<Quote>();
+
+		new ConnectionFactory();
+		try (Connection connection = ConnectionFactory.createConnection()) {
+
+			if (connection.isClosed()) {
+				System.out.println("Conexão falhou");
+			} else {
+				System.out.println("Conexão realizada");
+			}
+
+			PreparedStatement stmt = connection.prepareStatement("select * from scripts where actor = ?");
+			stmt.setString(1, actor);
+
+			ResultSet resultSet = stmt.executeQuery();
+
+			while (resultSet.next()) {
+
+				String name = resultSet.getString("actor");
+				String quote = resultSet.getString("detail");
+
+				Quote quote2 = new Quote(name, quote);
+
+				quotes.add(quote2);
+
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		int indexRandom = (int) Math.round(Math.random() * quotes.size());
+
+		return quotes.get(indexRandom);
 	}
 
 }
